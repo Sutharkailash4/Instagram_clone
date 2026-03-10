@@ -2,7 +2,7 @@ const express = require("express");
 const userAuthentication = express.Router();
 const userModel = require(".././models/userModel");
 const jwt = require("jsonwebtoken");
-const crypto = required("crypto");
+const crypto = require("crypto");
 
 userAuthentication.post("./register",async(req,res)=>{
     try{
