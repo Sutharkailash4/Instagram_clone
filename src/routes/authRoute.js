@@ -9,7 +9,10 @@ userAuthentication.post("./register",async(req,res)=>{
         if(!data.name || data.name.trim()==="") return res.status(409).json({message : "Username is Required"});
         else if(!data.email || data.email.trim()==="") return res.status(409).json({message : "Email is Required"});
         else if(!data.password || data.password.trim()==="") return res.status(409).json({message : "Password is Required"});
-        
+        else {
+            const {name, email, password, bio, profile_pic} = req.body;
+            
+        }
     }catch(error){
         res.status(400).json({
             message : "Something Went Wrong"
