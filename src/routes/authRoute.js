@@ -11,18 +11,18 @@ userAuthentication.post("./register",async(req,res)=>{
         else if(!data.password || data.password.trim()==="") return res.status(409).json({message : "Password is Required"});
         else {
             const {name, email, password, bio, profile_pic} = req.body;
-            const isUserAlreadyExists = await userModel.findOne({name});
-            if(isUserAlreadyExists){
-                return res.status(409).json({
-                    message : 'Username is Already Exists'
-                })
-            }
-            const isEmailAlreadyExists = await userModel.findOne({email});
-            if(isEmailAlreadyExists){
-                return res.status(409).json({
-                    message : "User With This Email is Already Exists"
-                })
-            }
+            // const isUserAlreadyExists = await userModel.findOne({name});
+            // if(isUserAlreadyExists){
+            //     return res.status(409).json({
+            //         message : 'Username is Already Exists'
+            //     })
+            // }
+            // const isEmailAlreadyExists = await userModel.findOne({email});
+            // if(isEmailAlreadyExists){
+            //     return res.status(409).json({
+            //         message : "User With This Email is Already Exists"
+            //     })
+            // }
             
         }
     }catch(error){
