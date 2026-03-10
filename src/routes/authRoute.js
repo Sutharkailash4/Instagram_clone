@@ -4,7 +4,7 @@ const userModel = require(".././models/userModel");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
-userAuthentication.post("./register",async(req,res)=>{
+userAuthentication.post("/register",async(req,res)=>{
     try{
         const data = req.body;
         if(!data.name || data.name.trim()==="") return res.status(409).json({message : "Username is Required"});
@@ -64,12 +64,73 @@ userAuthentication.post("./register",async(req,res)=>{
                     expiresIn : "7d"
                 }
             )
-            res.cookie("a_token",access_token);
-            res.cookie("r_token",refresh_token);
+            res.cookie("a_token",access_token,
+                {
+                    httpOnly : true,
+                    secure : false,
+                    sameSite : "strict"
+                }
+            );
+            res.cookie("r_token",refresh_token,{
+                httpOnly : true,
+                secure : false,
+                sameSite : "strict"
+            });
             res.status(201).json({
-                message : "User Register Successfully"
+                message : "User Register Successfully",
+                user : {
+                    id : user._id,
+                    username : user.name,
+                    email : user.email,
+                }
             })
         }   
+    }catch(error){
+        res.status(400).json({
+            message : "Something Went Wrong"
+        })
+    }
+})
+
+userAuthentication.post*("/login",async(req,res)=>{
+    try{
+        const data = req.body;
+        if(!data.name || data.name.trim()==="") return res.status(409).json({message : "Name is Required"});
+        else if(!data.password || data.password.trim()==="") return res.status(409).json({message : "Password is Required"});
+        else {
+            const {name, password} = req.body;
+            const isUserExists = await userModel.findOne({name});
+            if(!isUserExists){
+                return res.status(409).json({
+                    message : "User Not Found"
+                })
+            }
+            const hash_password = crypto.createHash("md5").update(password).digest("hex");
+            if(!isUserExists.password === hash_password){
+                return res.status(409).json({
+                    message : "Password is Incorrect"
+                })
+            }
+            const access_token = jwt.sign(
+                {
+                    id : isUserExists._id,
+                    email : isUserExists.email
+                },
+                process.env.JWT_ACCESS_TOKEN,
+                {
+                    expiresIn : "2h"
+                }
+            )
+            res.cookie("a_token",access_token);
+            res.status(201).json({
+                message : "User Login Successfully",
+                user : {
+                    id : isUserExists._id,
+                    username : isUserExists.name,
+                    email : isUserExists.email
+                }
+            })
+        }
     }catch(error){
         res.status(400).json({
             message : "Something Went Wrong"
