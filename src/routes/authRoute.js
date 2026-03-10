@@ -39,7 +39,9 @@ userAuthentication.post("./register",async(req,res)=>{
             const user = await userModel.create({
                 name : name,
                 email : email,
-                password : hash_password
+                password : hash_password,
+                bio : bio,
+                profile_pic : profile_pic
             })
             const access_token = jwt.sign(
             {
@@ -62,8 +64,12 @@ userAuthentication.post("./register",async(req,res)=>{
                     expiresIn : "7d"
                 }
             )
-            
-        }
+            res.cookie("a_token",access_token);
+            res.cookie("r_token",refresh_token);
+            res.status(201).json({
+                message : "User Register Successfully"
+            })
+        }   
     }catch(error){
         res.status(400).json({
             message : "Something Went Wrong"
