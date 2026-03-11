@@ -92,7 +92,7 @@ userAuthentication.post("/register",async(req,res)=>{
     }
 })
 
-userAuthentication.post*("/login",async(req,res)=>{
+userAuthentication.post("/login",async(req,res)=>{
     try{
         const data = req.body;
         if(!data.name || data.name.trim()==="") return res.status(409).json({message : "Name is Required"});
@@ -106,7 +106,7 @@ userAuthentication.post*("/login",async(req,res)=>{
                 })
             }
             const hash_password = crypto.createHash("md5").update(password).digest("hex");
-            if(!isUserExists.password === hash_password){
+            if(isUserExists.password !== hash_password){
                 return res.status(409).json({
                     message : "Password is Incorrect"
                 })
@@ -121,7 +121,26 @@ userAuthentication.post*("/login",async(req,res)=>{
                     expiresIn : "2h"
                 }
             )
-            res.cookie("a_token",access_token);
+            const refresh_token = jwt.sign(
+                {
+                    id : user._id,
+                    email : user.email
+                },
+                process.env.JWT_REFRESH_TOKEN,
+                {
+                    expiresIn : "7d"
+                }
+            )
+            res.cookie("a_token",access_token,{
+                httpOnly : true,
+                secure : true,
+                sameSite : "strict"
+            });
+             res.cookie("a_token",refresh_token,{
+                httpOnly : true,
+                secure : true,
+                sameSite : "strict"
+             });
             res.status(201).json({
                 message : "User Login Successfully",
                 user : {
