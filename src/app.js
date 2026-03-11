@@ -10,11 +10,15 @@ app.use(cookieParser());
 app.get("/users",async(req,res)=>{
     try{
         const allUser = await userModel.find();
-        if(!find){
+        if(allUser.length===0){
             return res.status(409).json({
                 message : "User Not Found"
             })
         }
+        res.status(200).json({
+            message : "User Fetched Successfully",
+            allUser
+        })
     }catch(error){
         res.status(400).json({
             message : "Something Went Wrong"
