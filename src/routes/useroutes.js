@@ -77,4 +77,14 @@ userAuthentication.post("/register",async(req,res)=>{
     }
 })
 
+userAuthentication.post("/login",async(req,res)=>{
+    try{
+        
+    }catch(error){
+        res.status(400).json({
+            message : "Something Went Wrong"
+        })
+    }
+})
+
 module.exports = userAuthentication;
