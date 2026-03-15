@@ -12,6 +12,14 @@ userAuthentication.post("/register",async(req,res)=>{
         else if(!data.password || data.password.trim()==="") return res.status(409).json({message : "Password is Required"});
         else {
             const {name, email, password, bio, profile_pic} = req.body;
+            const isEmailAlreadyExists = await model.findOne({email});
+            if(!!isEmailAlreadyExists){
+                return res.status(409).json({
+                    message : "User With This Email is Already Exists"
+                })
+            }
+            const isUserAlreadyExists = await model.findOne({name});
+            if()
             const hash_password = crypto.createHash("md5").update(password).digest("hex"); 
             const user = await model.create({
                 name : name,
@@ -65,6 +73,15 @@ userAuthentication.post("/register",async(req,res)=>{
     }
 })
 
-
+userAuthentication.post("/login",async(req,res)=>{
+    try{
+        const data = req.body;
+        if(!data.password || data.password.trim()==="") return res
+    }catch(error){
+        res.status(400).json({
+            message : "Something Went Wrong"
+        })
+    }
+})
 
 module.exports = userAuthentication;
