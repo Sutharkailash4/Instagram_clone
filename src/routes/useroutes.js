@@ -40,8 +40,20 @@ userAuthentication.post("/register",async(req,res)=>{
                     expiresIn : "7d"
                 }
             )
-            res.cookie("Cookie",a_token);
-            res.cookie("Cookie",r_token);
+            res.cookie("access_token",a_token,
+                {
+                    httpOnly : true,
+                    secure : true,
+                    sameSite : "strict"
+                }
+            );
+            res.cookie("refresh_token",r_token,
+                {
+                    httpOnly : true,
+                    secure : true,
+                    sameSite : "strict"
+                }
+            );
             res.status(200).json({
                 message : "User Created Successfully"
             })
@@ -53,4 +65,6 @@ userAuthentication.post("/register",async(req,res)=>{
     }
 })
 
-module.exports = userAuth;
+
+
+module.exports = userAuthentication;
