@@ -40,6 +40,11 @@ userAuthentication.post("/register",async(req,res)=>{
                     expiresIn : "7d"
                 }
             )
+            res.cookie("Cookie",a_token);
+            res.cookie("Cookie",r_token);
+            res.status(200).json({
+                message : "User Created Successfully"
+            })
         }
     }catch(error){
         res.status(400).json({
