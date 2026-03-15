@@ -25,7 +25,20 @@ userAuthentication.post("/register",async(req,res)=>{
                     id : user._id,
                     email : user.email
                 },
-
+                process.env.JWT_ACCESS_TOKEN,
+                {
+                    expiresIn : "3h"
+                }
+            )
+            const r_token = jwt.sign(
+                {
+                    id : user._id,
+                    email : user.email
+                },
+                process.env.JWT_REFRESH_TOKEN,
+                {
+                    expiresIn : "7d"
+                }
             )
         }
     }catch(error){
