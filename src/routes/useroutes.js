@@ -19,7 +19,11 @@ userAuthentication.post("/register",async(req,res)=>{
                 })
             }
             const isUserAlreadyExists = await model.findOne({name});
-            if()
+            if(!!isUserAlreadyExists){
+                return res.status(409).json({
+                    message : "This Username is Already Exists"
+                })
+            }
             const hash_password = crypto.createHash("md5").update(password).digest("hex"); 
             const user = await model.create({
                 name : name,
@@ -66,17 +70,6 @@ userAuthentication.post("/register",async(req,res)=>{
                 message : "User Created Successfully"
             })
         }
-    }catch(error){
-        res.status(400).json({
-            message : "Something Went Wrong"
-        })
-    }
-})
-
-userAuthentication.post("/login",async(req,res)=>{
-    try{
-        const data = req.body;
-        if(!data.password || data.password.trim()==="") return res
     }catch(error){
         res.status(400).json({
             message : "Something Went Wrong"
