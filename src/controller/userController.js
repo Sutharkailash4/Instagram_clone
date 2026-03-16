@@ -97,10 +97,64 @@ const loginController = async (req,res) => {
                 message : "User Does Not Exists"
             })
         }
+        const hash_password = crypto.createHash("md5").update(password).digest("hex");
+        const isPasswordValid = hash_password === isUserExists.password;
+        if(!isPasswordValid){
+            return res.status(401).json({
+                message : "Wrong Password try again"
+            })
+        }
+        const a_token = jwt.sign(
+            {
+                id : isUserExists._id,
+                email : isUserExists.email
+            },
+            process.env.JWT_ACCESS_TOKEN,
+            {
+                expiresIn : "3h"
+            }
+        )
+        const r_token = jwt.sign(
+            {
+                id : isUserExists._id,
+                email : isUserExists.email
+            },
+            process.env.JWT_REFRESH_TOKEN,
+            {
+                expiresIn : "7d"
+            }
+        )
+        res.cookie("access_token",a_token,
+            {
+                httpOnly : true,
+                secure : true,
+                sameSite : "strict"
+            }
+        )
+        res.cookie("refresh_token",r_token,
+            {
+                httpOnly : true,
+                secure : true,
+                sameSite : "strict"
+            }
+        )
+        res.status(201).json({
+            message : "User Login Successfully",
+            user : {
+                id : isUserExists._id,
+                username : isUserExists.name,
+                email : isUserExists.email
+            }  
+        })
        }
     }catch(error){
         res.status(400).json({
             message : "Something Went Wrong"
         })
     }
+}
+
+module.exports = {
+    registerController,
+    loginController
 }
