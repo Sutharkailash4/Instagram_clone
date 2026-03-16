@@ -79,7 +79,9 @@ userAuthentication.post("/register",async(req,res)=>{
 
 userAuthentication.post("/login",async(req,res)=>{
     try{
-        
+        const data = req.body;
+        if(!data.password || data.password.trim()==="") return res.status(409).json({message : "Something Went Wrong"});
+        else if()
     }catch(error){
         res.status(400).json({
             message : "Something Went Wrong"
