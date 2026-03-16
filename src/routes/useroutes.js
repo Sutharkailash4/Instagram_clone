@@ -127,6 +127,20 @@ userAuthentication.post("/login",async(req,res)=>{
                 expiresIn : "7d"
             }
         )
+        res.cookie("access_token",a_token,
+            {
+                httpOnly : true,
+                secure : true,
+                sameSite : "strict"
+            }
+        )
+        res.cookie("refresh_token",r_token,
+            {
+                httpOnly : true,
+                secure : true,
+                sameSite : "strict"
+            }
+        )
     }catch(error){
         res.status(400).json({
             message : "Something Went Wrong"
