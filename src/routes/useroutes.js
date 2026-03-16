@@ -81,7 +81,11 @@ userAuthentication.post("/login",async(req,res)=>{
     try{
         const data = req.body;
         if(!data.password || data.password.trim()==="") return res.status(409).json({message : "Something Went Wrong"});
-        else if()
+        else{
+            const {email, name, password}
+            const user = await model.findOne({email});
+            if()
+        }
     }catch(error){
         res.status(400).json({
             message : "Something Went Wrong"
