@@ -96,6 +96,13 @@ userAuthentication.post("/login",async(req,res)=>{
                 })
             }
         }
+        const hash_password = crypto.createHash("md5").update(password).digest("hex");
+        if(hash_password !== isUserAlreadyExistsByEmail ){
+            return res.status(409).json({
+                message : "Wrong Password Try Again"
+            })
+        }
+        
     }catch(error){
         res.status(400).json({
             message : "Something Went Wrong"
