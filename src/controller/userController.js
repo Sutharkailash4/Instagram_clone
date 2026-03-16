@@ -82,7 +82,22 @@ const registerController = async (req,res) => {
 
 const loginController = async (req,res) => {
     try{
-       
+       const data = req.body;
+       if(!data.password || data.password.trim()==="")  return res.status(409).json({message : "Password is Required"});
+       else {
+        const{email, name, password} = req.body;
+        const isUserExists = await model.findOne({
+            $or : [
+                {email : email},
+                {name : name}
+            ]
+        })
+        if(!isUserExists){
+            return res.status(409).json({
+                message : "User Does Not Exists"
+            })
+        }
+       }
     }catch(error){
         res.status(400).json({
             message : "Something Went Wrong"
