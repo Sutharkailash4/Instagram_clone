@@ -82,9 +82,19 @@ userAuthentication.post("/login",async(req,res)=>{
         const data = req.body;
         if(!data.password || data.password.trim()==="") return res.status(409).json({message : "Something Went Wrong"});
         else{
-            const {email, name, password}
-            const user = await model.findOne({email});
-            if()
+            const {email, name, password} = req.body;
+            const isUserAlreadyExistsByName = await model.findOne({email});
+            if(!isUserAlreadyExistsByName){
+                return res.status(409).json({
+                    message : "User Not Exists"
+                })
+            }
+            const isUserAlreadyExistsByEmail = await model.findOne({name});
+            if(!isUserAlreadyExistsByEmail){
+                return res.status(409).json({
+                    message : "User Not Exists"
+                })
+            }
         }
     }catch(error){
         res.status(400).json({
