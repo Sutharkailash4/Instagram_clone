@@ -67,7 +67,12 @@ userAuthentication.post("/register",async(req,res)=>{
                 }
             );
             res.status(200).json({
-                message : "User Created Successfully"
+                message : "User Created Successfully",
+                user : {
+                    id : user._id,
+                    username : user.name,
+                    email : user.email
+                }
             })
         }
     }catch(error){
@@ -97,12 +102,31 @@ userAuthentication.post("/login",async(req,res)=>{
             }
         }
         const hash_password = crypto.createHash("md5").update(password).digest("hex");
-        if(hash_password !== isUserAlreadyExistsByEmail ){
+        if(hash_password !== isUserAlreadyExistsByEmail.password ){
             return res.status(409).json({
                 message : "Wrong Password Try Again"
             })
         }
-        
+        const a_token = jwt.sign(
+            {
+                id : isUserAlreadyExistsByEmail._id,
+                email : isUserAlreadyExistsByEmail.email
+            },
+            process.env.JWT_ACCESS_TOKEN,
+            {
+                expiresIn : "3h"
+            }
+        ) 
+        const r_token = jwt.sign(
+             {
+                id : isUserAlreadyExistsByEmail._id,
+                email : isUserAlreadyExistsByEmail.email
+            },
+            process.env.JWT_REFRESH_TOKEN,
+            {
+                expiresIn : "7d"
+            }
+        )
     }catch(error){
         res.status(400).json({
             message : "Something Went Wrong"
