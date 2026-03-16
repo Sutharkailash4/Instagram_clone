@@ -85,9 +85,9 @@ userAuthentication.post("/register",async(req,res)=>{
 userAuthentication.post("/login",async(req,res)=>{
     try{
         const data = req.body;
+        const {email, name, password} = req.body;
         if(!data.password || data.password.trim()==="") return res.status(409).json({message : "Something Went Wrong"});
         else{
-            const {email, name, password} = req.body;
             const isUserAlreadyExistsByName = await model.findOne({email});
             if(!isUserAlreadyExistsByName){
                 return res.status(409).json({
@@ -141,6 +141,14 @@ userAuthentication.post("/login",async(req,res)=>{
                 sameSite : "strict"
             }
         )
+        res.status(201).json({
+            message : "User Login Successfully",
+            user : {
+                id : isUserAlreadyExistsByEmail._id,
+                username : isUserAlreadyExistsByEmail.name,
+                email : isUserAlreadyExistsByEmail.email
+            }
+        })
     }catch(error){
         res.status(400).json({
             message : "Something Went Wrong"
