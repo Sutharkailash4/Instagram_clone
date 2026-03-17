@@ -63,7 +63,6 @@ const registerController = async (req,res) => {
                 sameSite : "strict"
             }
         )
-       }
        res.status(200).json({
         message : "User Create Successfuly",
         user : {
@@ -72,6 +71,7 @@ const registerController = async (req,res) => {
             email : user.email
         }
        })
+       }
     }catch(error){
         res.status(400).json({
             message : "Something Went Wrong",
