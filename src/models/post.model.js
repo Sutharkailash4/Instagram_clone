@@ -7,10 +7,10 @@ const postSchema = new mongoose.Schema({
     },
     imageURL : {
         type : String,
-        required : [true, "Image is Required for Post"]
+        required : [true, "Image is Required"]
     }
 })
 
-const postModel = mongoose.model("Posts",postSchema);
+const postModel = mongoose.model("insta-post",postSchema);
 
-module.exports = postModel; 
+module.exports = postModel;
