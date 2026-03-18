@@ -2,13 +2,10 @@ const model = require(".././models/post.model");
 
 async function postCreateController(req,res){
     try{
-       const data = req.body;
        res.status(200).json({
         message : "Post Created Successfully",
-        post : {
-            caption : data.caption,
-            imageURL : data.imageURL
-        }
+        post : req.body,
+        file : req.file 
        })
     }catch(error){
         res.status(400).json({
