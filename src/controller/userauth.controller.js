@@ -34,7 +34,7 @@ async function registerController(req,res){
                     id : user._id,
                     email : user.email
                 },
-                process.env.JWT_ACCESS_TOEKN,
+                process.env.JWT_ACCESS_TOKEN,
                 {
                     expiresIn : "3h"
                 }
