@@ -7,7 +7,7 @@ const postSchema = new mongoose.Schema({
     },
     imageURL : {
         type : String,
-        required : [true, "Image is Required"]
+        required : [true, "Post is Required"]
     }
 })
 
