@@ -14,11 +14,7 @@ async function createUserPost(req,res){
             })
         }
         const allCookie = req.cookies.token;
-        if(!allCookie){
-            return res.status(409).json({
-                message : "Token Not Provided ! Unauthorized Access"
-            })
-        }
+        console.log(allCookie);
         const {caption} = req.body;
         const post = await uploader.files.upload({
             file : await toFile(Buffer.from(req.file.buffer),"imageURL"),

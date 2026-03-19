@@ -21,7 +21,7 @@ async function registerController(req,res){
                     message : "User Already Exists"
                 })
             }
-            const hash_password = await bcrypt.hash(password , 20);
+            const hash_password = await bcrypt.hash(password , 10);
             const user = await model.create({
                 name : name,
                 email : email,
@@ -105,7 +105,7 @@ async function loginController(req,res){
                     id : isUserExists._id,
                     email : isUserExists.email
                 },
-                process.env.JWT_ACCESS_TOEKN,
+                process.env.JWT_ACCESS_TOKEN,
                 {
                     expiresIn : "3h"
                 }
