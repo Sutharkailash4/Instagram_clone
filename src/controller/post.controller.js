@@ -7,16 +7,17 @@ const uploader = new ImageKit({
 
 async function createUserPost(req,res){
     try{
-        const user = await uploader.files.upload({
+        if(!req.file){
+            return res.status(409).json({
+                message : "Post is Required"
+            })
+        }
+        const {caption} = req.body;
+        const post = await uploader.files.upload({
             file : await toFile(Buffer.from(req.file.buffer),"imageURL"),
-            fileName : originalname
+            fileName : req.file.originalname
         })
-        res.status(200).json({
-            message : "Post Created Successfully",
-            caption : req.body.caption,
-            post : req.file,
-            imagekit : user
-        })
+        res.send(post);
     }catch(error){
         res.status(400).json({
             message : "Something Went Wrong"
