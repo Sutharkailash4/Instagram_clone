@@ -1,4 +1,4 @@
-const jwt = require("jsonwentoken");
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const model = require(".././models/userModel");
 
@@ -9,11 +9,11 @@ const registerController = async (req,res) => {
         else if(!data.email || data.email.trim()==="") return res.status(409).json({message : "Email is Required"});
         else if(!data.password || data.password.trim()==="") return res.status(409).json({message : "Password is Required"});
         else {
-            const {username, email, password, bio, peofile_image} = req.body;
+            const {username, email, password, bio, profile_image} = req.body;
             const isUserAlreadyExistsByUsername = await model.findOne({username});
             const isUserAlreadyExistsbyEmail = await model.findOne({email});
             if(!!isUserAlreadyExistsByUsername || isUserAlreadyExistsbyEmail) return res.status(409).json({message : "User Already Exists"});                 
-            const hash_password = bcrypt.hash(password, 10);
+            const hash_password = await bcrypt.hash(password, 10);
             const user = await model.create({
                 username : username,
                 email : email,
@@ -32,7 +32,7 @@ const registerController = async (req,res) => {
                 {expiresIn : "7d"}
             )
             res.cookie("access_token",access_token,
-                {httpOnly : true, secure : true, sameSite : "stricr"}
+                {httpOnly : true, secure : true, sameSite : "strict"}
             );
             res.cookie("refresh_token",refresh_token,
                 {httpOnly : true, secure : true, sameSite : "strict"}
@@ -47,13 +47,13 @@ const registerController = async (req,res) => {
     }catch(error){
         res.status(400).json({
             message : "Something Went Wrong",
-            error
+            error : error.message
         })
     }
 }
 
 const loginController = (req,res) => {
-
+    
 }
 
 module.exports = {
