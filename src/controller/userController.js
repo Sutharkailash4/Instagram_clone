@@ -52,8 +52,51 @@ const registerController = async (req,res) => {
     }
 }
 
-const loginController = (req,res) => {
-    
+const loginController = async (req,res) => {
+    try{
+    const data = req.body;
+    if(!data.password || data.password.trim()==="") return res.status(409).json({message : "Password is Required"});
+    else if(!data.username || data.username.trim()==="" || !data.email || data.email.trim()==="") return res.status(409).json("Username or email is Required");
+    else {
+        const {email, username, password} = req.body;
+        const isUserExists = await model.findOne({
+            $or : [
+                {username},
+                {email}
+            ]
+        });
+        if(!isUserExists) return res.status(409).json({message : "User Does Not Exists"});
+        const isPasswordIsValid = await bcrypt.compare(password, isUserExists.password);
+        if(!isPasswordIsValid) return res.status(401).json({message : "Invalid Password ! Please Try Again"});
+        const access_token = jwt.sign(
+            {id : isUserExists._id, email : isUserExists.email},
+            process.env.JWT_ACCESS_TOKEN,
+            {expiresIn : "3h"}
+        )
+        const refresh_token = jwt.sign(
+            {id : isUserExists._id, email : isUserExists.email},
+            process.env.JWT_REFRESH_TOKEN,
+            {expiresIn : "7d"}
+        )
+        res.cookie("access_token",access_token,
+            {httpOnly : true, secure : true, sameSite : "strict"}
+        )
+         res.cookie("refresh_token",refresh_token,
+            {httpOnly : true, secure : true, sameSite : "strict"}
+        )
+        res.status(200).json({
+            message : "User Login Successfully",
+            id : isUserExists._id,
+            username : isUserExists.username,
+            email : isUserExists.email
+        })
+    }
+    }catch(error){
+        res.status(400).json({
+            message : "Something Went Wrong",
+            error : error.message
+        })
+    }
 }
 
 module.exports = {
