@@ -32,3 +32,5 @@ const createPostController = async (req,res) => {
 module.exports = {
     createPostController
 } 
+
+console.log("Hello World") 
