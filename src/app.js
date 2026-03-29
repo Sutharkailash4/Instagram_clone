@@ -5,8 +5,8 @@ const postRoute = require("./routes/postRoute");
 const cookieParser = require("cookie-parser");
 
 app.use(express.json());
+app.use(cookieParser());
 app.use("/api/auth",userAuth);
 app.use("/api/post",postRoute);
-app.use(cookieParser());
 
 module.exports = app;
