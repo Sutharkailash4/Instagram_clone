@@ -10,3 +10,4 @@ app.use("/api/post",postRoute);
 app.use(cookieParser());
 
 module.exports = app;
+console.log("kaialsh");

@@ -56,7 +56,7 @@ const loginController = async (req,res) => {
     try{
     const data = req.body;
     if(!data.password || data.password.trim()==="") return res.status(409).json({message : "Password is Required"});
-    else if(!data.username || data.username.trim()==="" || !data.email || data.email.trim()==="") return res.status(409).json("Username or email is Required");
+    else if(!data.username && data.username.trim()==="" || !data.email && data.email.trim()==="") return res.status(409).json("Username or email is Required");
     else {
         const {email, username, password} = req.body;
         const isUserExists = await model.findOne({
