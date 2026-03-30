@@ -18,7 +18,8 @@ const createPostController = async (req,res) => {
 
         const uploadToImagekit = await client.files.upload({
             file : await toFile(Buffer.from(req.file.buffer),"post_image"),
-            fileName : req.file.originalname
+            fileName : req.file.originalname,
+            folder : "/all_posts"
         });
         res.status(201).json({
             message : "Post Created Successfully",
