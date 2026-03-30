@@ -9,8 +9,13 @@ const client = new ImageKit({
 const createPostController = async (req,res) => {
     try{
         if(!req.file) return res.status(409).json({message : ""})
+        
         const token = req.cookies.access_token;
-        console.log(token);
+
+        const user = jwt.verify(token, process.env.JWT_ACCESS_TOKEN);
+
+        console.log(user);
+
         const uploadToImagekit = await client.files.upload({
             file : await toFile(Buffer.from(req.file.buffer),"post_image"),
             fileName : req.file.originalname
