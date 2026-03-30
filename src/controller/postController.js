@@ -9,7 +9,8 @@ const client = new ImageKit({
 const createPostController = async (req,res) => {
     try{
         if(!req.file) return res.status(409).json({message : ""})
-             
+        const token = req.cookies.access_token;
+        console.log(token);
         const uploadToImagekit = await client.files.upload({
             file : await toFile(Buffer.from(req.file.buffer),"post_image"),
             fileName : req.file.originalname
@@ -17,7 +18,6 @@ const createPostController = async (req,res) => {
         res.status(201).json({
             message : "Post Created Successfully",
             caption : req.body.caption,
-            post_image : req.file,
             imageKit_data : uploadToImagekit
         })
     }catch(error){
@@ -30,5 +30,4 @@ const createPostController = async (req,res) => {
 
 module.exports = {
     createPostController
-} 
-
+}
