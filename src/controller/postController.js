@@ -59,7 +59,11 @@ const getPostController = async (req,res) => {
        const posts = await model.find({
         user : user_id
        })
-       res.send(posts);
+       if(posts.length===0) return res.status(400).json({message : "No User Found Try Again"});
+       res.status(200).json({
+        message : "Posts Feched Successfully",
+        posts
+       })
    } catch(error){
     res.status(200).json({
         message : "Something Went Wrong",
