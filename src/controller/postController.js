@@ -47,37 +47,21 @@ const createPostController = async (req,res) => {
 } 
 
 const getPostController = async (req,res) => {
-    try{
-        const user = req.cookies.access_token;
-        if(!user){
-            return res.status(409).json({
-                message : "Token Not Provided ! Unauthorized Access"
-            })
-        }
-        const decoded = jwt.verify(user, process.env.JWT_ACCESS_TOKEN);
-
-        console.log(decoded);
-        console.log(decoded.id);
-        console.log(decoded.email);
-
-        const findUser = await model.find({decoded});
-        if(!findUser) {
-            return res.status(409).json({
-                message : "User Not Exists"
-            })
-        }
-
-        res.status(200).json({
-            message : "User get Successfully",
-            user : findUser
+   try{
+       const token = req.cookies.access_token;
+       if(!token){
+        return res.status(400).json({
+            message : "Cookie not Provided ! Unauthorized Access"
         })
-        
-    } catch (error) {
-        res.status(400).json({
-            message : "Something Went Wrong",
-            error : error.message
-        })
-    }
+       }
+       const user = jwt.verify(token, process.env.JWT_ACCESS_TOKEN);
+       res.send(user);
+   } catch(error){
+    res.status(200).json({
+        message : "Something Went Wrong",
+        error : error.message
+    })
+   }
 }
 
 module.exports = {
