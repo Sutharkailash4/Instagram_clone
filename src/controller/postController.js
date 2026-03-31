@@ -56,16 +56,23 @@ const getPostController = async (req,res) => {
         }
         const decoded = jwt.verify(user, process.env.JWT_ACCESS_TOKEN);
 
-        const findUser = await model.findById(decoded.id);
+        console.log(decoded);
+
+        const findUser = await model.find({decoded});
         if(!findUser) {
             return res.status(409).json({
                 message : "User Not Exists"
             })
         }
+
+        res.status(200).json({
+            message : "User get Successfully"
+        })
         
     } catch (error) {
         res.status(400).json({
-            message : "Something Went Wrong"
+            message : "Something Went Wrong",
+            error : error.message
         })
     }
 }
