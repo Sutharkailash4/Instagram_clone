@@ -66,7 +66,8 @@ const getPostController = async (req,res) => {
         }
 
         res.status(200).json({
-            message : "User get Successfully"
+            message : "User get Successfully",
+            user : findUser
         })
         
     } catch (error) {
