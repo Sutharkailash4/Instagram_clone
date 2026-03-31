@@ -55,7 +55,11 @@ const getPostController = async (req,res) => {
         })
        }
        const user = jwt.verify(token, process.env.JWT_ACCESS_TOKEN);
-       res.send(user);
+       const user_id = user.id;
+       const posts = await model.find({
+        user : user_id
+       })
+       res.send(posts);
    } catch(error){
     res.status(200).json({
         message : "Something Went Wrong",
