@@ -12,19 +12,31 @@ const createPostController = async (req,res) => {
         
         const token = req.cookies.access_token;
 
-        const user = jwt.verify(token, process.env.JWT_ACCESS_TOKEN);
+        if(!token){
+            return res.status(409).json({
+                message : "Token Not Provided ! Unauthorized Access"
+            })
+        }
 
-        console.log(user);
+        const user = jwt.verify(token, process.env.JWT_ACCESS_TOKEN);
 
         const uploadToImagekit = await client.files.upload({
             file : await toFile(Buffer.from(req.file.buffer),"post_image"),
             fileName : req.file.originalname,
             folder : "/all_posts"
         });
+
+        const userPost = await model.create({
+            caption : req.body.caption,
+            post_image : uploadToImagekit.url,
+            user : user.id
+        })
+
         res.status(201).json({
             message : "Post Created Successfully",
-            caption : req.body.caption,
-            imageKit_data : uploadToImagekit
+            caption : userPost.caption,
+            post_image : userPost.post_image,
+            user_id : userPost.user
         })
     }catch(error){
         res.status(400).json({
@@ -34,6 +46,31 @@ const createPostController = async (req,res) => {
     }
 } 
 
+const getPostController = async (req,res) => {
+    try{
+        const user = req.cookies.access_token;
+        if(!user){
+            return res.status(409).json({
+                message : "Token Not Provided ! Unauthorized Access"
+            })
+        }
+        const decoded = jwt.verify(user, process.env.JWT_ACCESS_TOKEN);
+
+        const findUser = await model.findById(decoded.id);
+        if(!findUser) {
+            return res.status(409).json({
+                message : "User Not Exists"
+            })
+        }
+        
+    } catch (error) {
+        res.status(400).json({
+            message : "Something Went Wrong"
+        })
+    }
+}
+
 module.exports = {
-    createPostController
+    createPostController,
+    getPostController
 }
