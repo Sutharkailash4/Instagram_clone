@@ -57,6 +57,7 @@ const getPostController = async (req,res) => {
         const decoded = jwt.verify(user, process.env.JWT_ACCESS_TOKEN);
 
         console.log(decoded);
+        console.log(decoded.id);
 
         const findUser = await model.find({decoded});
         if(!findUser) {
