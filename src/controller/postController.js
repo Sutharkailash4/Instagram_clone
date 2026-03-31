@@ -58,6 +58,7 @@ const getPostController = async (req,res) => {
 
         console.log(decoded);
         console.log(decoded.id);
+        console.log(decoded.email);
 
         const findUser = await model.find({decoded});
         if(!findUser) {
