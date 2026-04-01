@@ -59,7 +59,7 @@ const getPostController = async (req,res) => {
        const posts = await model.find({
         user : user_id
        })
-       if(posts.length===0) return res.status(400).json({message : "No User Found Try Again"});
+       if(posts.length===0) return res.status(400).json({message : "No Post Created"});
        res.status(200).json({
         message : "Posts Feched Successfully",
         posts
@@ -72,7 +72,36 @@ const getPostController = async (req,res) => {
    }
 }
 
+const getPostDetailsController = async (req,res) => {
+    try{
+       const post_id = req.params.postId;
+       const token = req.cookies.access_token;
+
+       const isPostExists = await model.find({
+            _id : post_id
+       }) 
+
+       if(isPostExists.length===0) return res.status(400).json({message : "Post Not Availabe on This Id"});
+       
+      const user = jwt.verify(token ,process.env.JWT_ACCESS_TOKEN);
+
+      if(isPostExists[0].user.toString() !== user.id) return res.status(409).json({message : "Unauthorized Access ! Please Try Again"});
+
+      res.status(200).json({
+        message : "Post Details Feched Successfully",
+        isPostExists
+      })
+
+    }catch(error){
+      res.status(400).json({
+        message : "Something Went Wrong",
+        error : error.message
+      })
+    }
+}
+
 module.exports = {
     createPostController,
-    getPostController
+    getPostController,
+    getPostDetailsController
 }
