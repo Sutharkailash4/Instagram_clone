@@ -9,4 +9,4 @@ const ConnectedToDatabase = () => {
     })
 }
 
-module.exports= ConnectedToDatabase;
+module.exports = ConnectedToDatabase;
