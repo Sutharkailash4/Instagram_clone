@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const identifyUser = async (req,res,next) => {
     try{
-        const token = req.cookies.access.token;
+        const token = req.cookies.access_token;
         if(!token){
             return res.status(409).json({
                 message : "Token Not Provided ! Unauthorized Access"
