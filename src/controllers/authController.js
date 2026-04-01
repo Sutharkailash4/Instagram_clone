@@ -83,7 +83,24 @@ const loginController = async (req, res) => {
                 message: "Username or Email is Required For Login"
             })
         } else {
-
+            const {password, email, username} = req.body;
+            const user = await model.findOne({
+                $or : [
+                    {username},
+                    {email}
+                ]
+            });
+            if(!user) {
+                return res.status(401).json({
+                    message : "User Not Exists ! Invalid credentials"
+                })
+            }
+            const isPasswordCorrect = await bcrypt.compare(password, user.password);
+            if(!isPasswordCorrect) {
+                return res.status(402).json({
+                    message : "Invalid Password ! Please Try Again"
+                })
+            }
         }
     } catch (error) {
         res.status(400).json({
