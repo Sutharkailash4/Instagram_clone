@@ -70,6 +70,7 @@ const registerController = async (req, res) => {
     }
 }
 
+//login
 const loginController = async (req, res) => {
     try {
         const data = req.body;
