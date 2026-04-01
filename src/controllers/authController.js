@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const model = require(".././models/authModel");
 
+// Register 
 const registerController = async (req, res) => {
     try {
         const data = req.body;
@@ -81,7 +82,7 @@ const loginController = async (req, res) => {
                 message: "Username or Email is Required For Login"
             })
         } else {
-            
+
         }
     } catch (error) {
         res.status(400).json({
