@@ -61,6 +61,12 @@ const registerController = async (req, res) => {
                 secure: true,
                 sameSite: "strict"
             });
+            res.status(201).json({
+                message : "User Register Successfully",
+                username : user.username,
+                id : user._id,
+                email : user.email
+            })
         }
     } catch (error) {
         res.status(400).json({
@@ -83,24 +89,47 @@ const loginController = async (req, res) => {
                 message: "Username or Email is Required For Login"
             })
         } else {
-            const {password, email, username} = req.body;
+            const { password, email, username } = req.body;
             const user = await model.findOne({
-                $or : [
-                    {username},
-                    {email}
+                $or: [
+                    { username },
+                    { email }
                 ]
             });
-            if(!user) {
+            if (!user) {
                 return res.status(401).json({
-                    message : "User Not Exists ! Invalid credentials"
+                    message: "User Not Exists ! Invalid credentials"
                 })
             }
             const isPasswordCorrect = await bcrypt.compare(password, user.password);
-            if(!isPasswordCorrect) {
+            if (!isPasswordCorrect) {
                 return res.status(402).json({
-                    message : "Invalid Password ! Please Try Again"
+                    message: "Invalid Password ! Please Try Again"
                 })
             }
+            const access_token = jwt.sign({
+                id: user._id,
+                email: user.email
+            }, process.env.JWT_ACCESS_TOKEN, {
+                expiresIn: "1h"
+            });
+            const access_token = jwt.sign({
+                id: user._id,
+                email: user.email
+            }, process.env.JWT_REFRESH_TOKEN, {
+                expiresIn: "7d"
+            });
+            res.cookie("access_token", access_token, {
+                httpOnly: true,
+                secure: true,
+                sameSite: "strict"
+            });
+            res.cookie("refresh_token", refresh_token, {
+                httpOnly: true,
+                secure: true,
+                sameSite: "strict"
+            });
+            
         }
     } catch (error) {
         res.status(400).json({
