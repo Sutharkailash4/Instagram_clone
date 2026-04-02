@@ -8,6 +8,6 @@ const upload = multer({
 
 postRoute.post("/createPost",upload.single("post_image"), postControllers.createPostController);
 postRoute.get("/getPost", postControllers.getPostController);
-postRoute.get("/getPostDetails", postControllers.getPostDetailsController);
+postRoute.get("/getPostDetails/:postId", postControllers.getPostDetailsController);
 
 module.exports = postRoute;
