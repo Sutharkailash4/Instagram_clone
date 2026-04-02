@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const ImageKit = require("@imagekit/nodejs");
 const client = new ImageKit({
-    privateKey : process.env.IMAGEKIT_PRIVATE_KEY
+    privateKey: process.env.IMAGEKIT_PRIVATE_KEY
 });
 
 const createPostController = async (req, res) => {
@@ -11,7 +11,15 @@ const createPostController = async (req, res) => {
                 message: "Post Image is Required For Creating Post"
             })
         }
-        res.send(req.file);        
+        const token = req.cookies.access_token;
+        if (!token) {
+            return res.status(400).json({
+                message : "Token Not Provided ! Unauthorized Access"
+            })
+        }
+        const user = jwt.verify(token, process.env.JWT_ACCESS_TOKEN);
+        
+        res.send(req.file);
     } catch (error) {
         res.status(400).json({
             message: "Something Went Wrong",
