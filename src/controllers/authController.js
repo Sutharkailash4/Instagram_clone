@@ -84,7 +84,7 @@ const loginController = async (req, res) => {
             return res.status(400).json({
                 message: "Password is Required For Login"
             })
-        } else if (!data.username || data.username.trim() === "" && !data.email || data.email.trim() === "") {
+        } else if ((!data.username || data.username.trim() === "") && (!data.email || data.email.trim() === "")) {
             return res.status(400).json({
                 message: "Username or Email is Required For Login"
             })
@@ -103,7 +103,7 @@ const loginController = async (req, res) => {
             }
             const isPasswordCorrect = await bcrypt.compare(password, user.password);
             if (!isPasswordCorrect) {
-                return res.status(402).json({
+                return res.status(401).json({
                     message: "Invalid Password ! Please Try Again"
                 })
             }
@@ -113,7 +113,7 @@ const loginController = async (req, res) => {
             }, process.env.JWT_ACCESS_TOKEN, {
                 expiresIn: "1h"
             });
-            const access_token = jwt.sign({
+            const refresh_token = jwt.sign({
                 id: user._id,
                 email: user.email
             }, process.env.JWT_REFRESH_TOKEN, {
@@ -129,7 +129,12 @@ const loginController = async (req, res) => {
                 secure: true,
                 sameSite: "strict"
             });
-            
+            res.status(200).json({
+                message : "User Logged In Successfully",
+                username : user.username,
+                id : user._id,
+                email : user.email
+            })
         }
     } catch (error) {
         res.status(400).json({
