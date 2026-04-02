@@ -12,13 +12,6 @@ const createPostController = async (req, res) => {
                 message: "Post Image is Required For Creating Post"
             })
         }
-        const token = req.cookies.access_token;
-        if (!token) {
-            return res.status(400).json({
-                message: "Token Not Provided ! Unauthorized Access"
-            })
-        }
-        const decoded = jwt.verify(token, process.env.JWT_ACCESS_TOKEN);
         const response = await client.files.upload({
             file: req.file.buffer.toString("base64"),
             fileName: req.file.originalname,
@@ -43,13 +36,6 @@ const createPostController = async (req, res) => {
 
 const getPostController = async (req, res) => {
     try {
-        const token = req.cookies.access_token;
-        if (!token) {
-            return res.status(409).json({
-                message: "Token Not Provided ! Unauthorized Access"
-            })
-        }
-        const decoded = jwt.verify(token, process.env.JWT_ACCESS_TOKEN);
         const posts = await model.find({
             user: decoded.id
         });
@@ -73,13 +59,6 @@ const getPostController = async (req, res) => {
 const getPostDetailsController = async (req, res) => {
     try {
         const post_id = req.params.postId;
-        const token = req.cookies.access_token;
-        if (!token) {
-            return res.status(400).json({
-                message: "Token Not Provided ! Unauthorized Access"
-            })
-        }
-        const decoded = jwt.verify(token, process.env.JWT_ACCESS_TOKEN);
         const post = await model.findOne({
             _id: post_id
         });
