@@ -51,7 +51,7 @@ const unLikeUserController = async (req, res) => {
                 message: "Please Enter Valid Id"
             })
         }
-        const isPostExists = await postModel.findById({ post });
+        const isPostExists = await postModel.findById(post);
         if (!isPostExists) {
             return res.status(404).json({
                 message: "Post Not Exists"
@@ -59,7 +59,7 @@ const unLikeUserController = async (req, res) => {
         }
         const isPostLiked = await model.findOne({
             user: user,
-            post: postModel
+            post: post
         });
         if (!isPostLiked) {
             return res.status(409).json({
@@ -71,8 +71,7 @@ const unLikeUserController = async (req, res) => {
             post : post
         });
         res.status(201).json({
-            message : "Post Unliked Successfully",
-            isPostExists
+            message : "Post Unliked Successfully"
         })
     } catch (error) {
         res.status(400).json({
