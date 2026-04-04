@@ -32,20 +32,32 @@ const Register = () => {
       toast.error('Password is Required')
     } else if (password.length < 8) {
       toast.error('Password Must be Greater Than 8 Character')
+    } else if (ConfirmPassword.trim() === '') {
+      toast.error('Confirm Passowrd is Required')
+    } else if (ConfirmPassword !== password) {
+      toast.error('Password Does Not Match')
     } else {
       setLoading(true)
       axios
-        .post('http://localhost:3000/api/auth/register', {
-          username,
-          email,
-          password
-        })
+        .post(
+          'http://localhost:3000/api/auth/register',
+          {
+            username: username.trim(),
+            email: email.trim(),
+            password
+          },
+          {
+            withCredentials: true
+          }
+        )
         .then(res => {
           toast.success('User Register Successfully')
           setUsername('')
           setEmail('')
           setPassword('')
+          setConfirmPassword('')
           navigate('/login')
+          console.log(res.data)
         })
         .catch(error => {
           toast.error(error.response?.data?.message || 'Something Went Wrong')
@@ -113,7 +125,6 @@ const Register = () => {
             <span
               className='register_show_password'
               onClick={() => {
-                console.log('Register')
                 if (passType === 'password') {
                   setPasstype('text')
                 } else {

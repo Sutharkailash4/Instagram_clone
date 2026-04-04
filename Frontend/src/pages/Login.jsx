@@ -18,6 +18,7 @@ const Login = () => {
 
   const submitHandler = e => {
     e.preventDefault()
+    
   }
 
   return (
@@ -55,7 +56,6 @@ const Login = () => {
             <span
               className='login_show_pass'
               onClick={() => {
-                console.log('Login')    
                 if (passType === 'password') {
                   setPasstype('text')
                 } else {
