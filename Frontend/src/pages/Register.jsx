@@ -2,12 +2,17 @@ import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { NavLink } from 'react-router-dom'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const Register = () => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [ConfirmPassword, setConfirmPassword] = useState('')
   const [passType, setPasstype] = useState('password')
+  const [loading, setLoading] = useState(false)
+
+  const navigate = useNavigate()
 
   let show_pass = false
 
@@ -25,7 +30,10 @@ const Register = () => {
       toast.error('Email is Required')
     } else if (password.trim() === '') {
       toast.error('Password is Required')
+    } else if (password.length < 8) {
+      toast.error('Password Must be Greater Than 8 Character')
     } else {
+      setLoading(true)
       axios
         .post('http://localhost:3000/api/auth/register', {
           username,
@@ -37,10 +45,13 @@ const Register = () => {
           setUsername('')
           setEmail('')
           setPassword('')
-          console.log(res.data)
+          navigate('/login')
         })
         .catch(error => {
-          console.log(error)
+          toast.error(error.response?.data?.message || 'Something Went Wrong')
+        })
+        .finally(() => {
+          setLoading(false)
         })
     }
   }
@@ -59,6 +70,7 @@ const Register = () => {
           <input
             type='text'
             placeholder='Username'
+            name='username'
             id='username_input'
             value={username}
             onChange={text => {
@@ -67,8 +79,9 @@ const Register = () => {
           />
           <br />
           <input
-            type='Email'
+            type='email'
             placeholder='Email'
+            name='email'
             id='email_input'
             value={email}
             onChange={text => {
@@ -79,16 +92,28 @@ const Register = () => {
           <input
             type={passType}
             placeholder='Password'
+            name='password'
             id='password_input'
             value={password}
             onChange={text => {
               setPassword(text.target.value)
             }}
           />
+          <input
+            type='password'
+            name='confirm_password'
+            id='confirm_password_input'
+            placeholder='Confirm Password'
+            value={ConfirmPassword}
+            onChange={text => {
+              setConfirmPassword(text.target.value)
+            }}
+          />
           {show_pass && (
             <span
               className='register_show_password'
               onClick={() => {
+                console.log('Register')
                 if (passType === 'password') {
                   setPasstype('text')
                 } else {
@@ -100,7 +125,9 @@ const Register = () => {
             </span>
           )}
           <br />
-          <button className='register_btn'>Register</button>
+          <button disabled={loading} type='submit' className='register_btn'>
+            {loading ? 'Registering....' : 'Register'}
+          </button>
           <p className='login_para'>
             Already have an account ? <NavLink to={'/login'}>Login</NavLink>
           </p>
