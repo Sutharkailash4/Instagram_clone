@@ -1,10 +1,21 @@
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
+import { NavLink } from 'react-router-dom'
+import axios from 'axios'
 
 const Register = () => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [passType, setPasstype] = useState('password')
+
+  let show_pass = false
+
+  if (password.trim() === '') {
+    show_pass = false
+  } else {
+    show_pass = true
+  }
 
   const submitHandler = e => {
     e.preventDefault()
@@ -15,7 +26,22 @@ const Register = () => {
     } else if (password.trim() === '') {
       toast.error('Password is Required')
     } else {
-        
+      axios
+        .post('http://localhost:3000/api/auth/register', {
+          username,
+          email,
+          password
+        })
+        .then(res => {
+          toast.success('User Register Successfully')
+          setUsername('')
+          setEmail('')
+          setPassword('')
+          console.log(res.data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   }
 
@@ -51,7 +77,7 @@ const Register = () => {
           />
           <br />
           <input
-            type='password'
+            type={passType}
             placeholder='Password'
             id='password_input'
             value={password}
@@ -59,9 +85,25 @@ const Register = () => {
               setPassword(text.target.value)
             }}
           />
+          {show_pass && (
+            <span
+              className='register_show_password'
+              onClick={() => {
+                if (passType === 'password') {
+                  setPasstype('text')
+                } else {
+                  setPasstype('password')
+                }
+              }}
+            >
+              Show
+            </span>
+          )}
           <br />
           <button className='register_btn'>Register</button>
-          <p className='login_para'>Already have an account ? Login</p>
+          <p className='login_para'>
+            Already have an account ? <NavLink to={'/login'}>Login</NavLink>
+          </p>
         </div>
       </form>
     </div>

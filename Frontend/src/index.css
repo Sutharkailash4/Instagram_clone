@@ -16,18 +16,19 @@ body {
   height: 100%;
 }
 
-button{
+button {
   border: none;
   border: 5px;
   cursor: pointer;
   color: white;
 }
 
-button:active{
+button:active {
   transform: scale(0.95);
 }
 
-.register_main_box {
+.register_main_box,
+.login_main_box {
   width: 100%;
   height: 100%;
   display: flex;
@@ -39,15 +40,23 @@ button:active{
   width: 30%;
   border: 1px solid black;
   padding: 10px;
+  position: relative;
 }
 
-.heading{
+.login_main_box form {
+  width: 30%;
+  border: 1px solid black;
+  padding: 10px;
+  position: relative;
+}
+
+.heading {
   font-size: 30px;
   text-align: center;
   font-family: sans-serif;
 }
 
-form input{
+.register_main_box input {
   width: 100%;
   height: 50px;
   margin-block: 10px;
@@ -58,7 +67,19 @@ form input{
   outline: 1px solid #ccc;
 }
 
-.register_btn{
+.login_main_box input {
+  width: 100%;
+  height: 50px;
+  margin-block: 10px;
+  padding: 8px;
+  font-size: 17px;
+  border-radius: 10px;
+  border: none;
+  outline: 1px solid #ccc;
+}
+
+.register_btn,
+.login_btn {
   width: 100%;
   height: 50px;
   background-color: rgb(107, 22, 22);
@@ -66,8 +87,32 @@ form input{
   font-size: 18px;
 }
 
-.login_para{
+.login_para,
+.register_para {
   font-size: 16px;
   margin-top: 10px;
   font-family: sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: red;
+}
+
+.register_show_password {
+  position: absolute;
+  top: 61.5%;
+  right: 6%;
+  font-size: 16px;
+  font-family: sans-serif;
+  cursor: pointer;
+}
+
+.login_show_pass {
+  position: absolute;
+  top: 52%;
+  right: 6%;
+  font-size: 16px;
+  font-family: sans-serif;
+  cursor: pointer;
 }
