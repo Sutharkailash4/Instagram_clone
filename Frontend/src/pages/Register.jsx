@@ -1,19 +1,31 @@
 import React, { useState } from 'react'
+import { toast } from 'react-toastify'
 
 const Register = () => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const submitHandler = (e) => {
-    e.preventDefault();
+  const submitHandler = e => {
+    e.preventDefault()
+    if (username.trim() === '') {
+      toast.error('Username is Required')
+    } else if (email.trim() === '') {
+      toast.error('Email is Required')
+    } else if (password.trim() === '') {
+      toast.error('Password is Required')
+    } else {
+        
+    }
   }
 
   return (
     <div className='register_main_box'>
-      <form onSubmit={(e)=>{
-        submitHandler(e);
-      }}>
+      <form
+        onSubmit={e => {
+          submitHandler(e)
+        }}
+      >
         <div className='heading_box'>
           <h2 className='heading'>Register</h2>
         </div>
