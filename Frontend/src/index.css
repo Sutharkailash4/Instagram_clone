@@ -143,24 +143,34 @@ button:active {
   font-size: 20px;
 }
 
-:root {
-  --count : 0px;
+@property --count-size {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
 }
 
 .register-container form .spinner {
   width: 30px;
   height: 30px;
-  border: 1px solid white;
   border-radius: 50%;
-  background: conic-gradient(from var(--count) ,red, blue);
+
+  background:
+    conic-gradient(rgb(255, 255, 255), rgb(0, 0, 0)) border-box,
+    radial-gradient(farthest-side, transparent calc(100% - 5px), black 0) content-box;
+
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5px), black 0);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 5px), black 0);
+
+  animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
-  from {
-
-  }
-
   to {
-
+    transform: rotate(360deg);
   }
+}
+
+.register-container form .register-btn:disabled{
+  opacity: 0.7;
+  pointer-events: none;
 }

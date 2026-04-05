@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
+import axios from 'axios'
 
 const Register = () => {
   const [username, setUsername] = useState('')
@@ -12,6 +13,8 @@ const Register = () => {
   const [confirmPasswordValid, setConfirmPasswordValid] = useState(false)
   const [passwordShow, setPasswordShow] = useState('password')
   const [bioCharCount, setBioCharCount] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [imageFile, setImageFile] = useState({})
 
   const [publicCheck, setPublic] = useState(false)
   const [privateCheck, setPrivate] = useState(false)
@@ -40,7 +43,41 @@ const Register = () => {
       toast.error('Please Select Your Account Type')
     } else if (!termsCheck) {
       toast.error('Please Agree Terms and Condition')
-    } 
+    } else {
+      setLoading(true)
+      axios
+        .post(
+          'http://localhost:3000/api/auth/register',
+          {
+            username: username,
+            email: email,
+            password: password,
+            profile_image: imageFile,
+            bio: bio
+          },
+          {
+            withCredentials: true
+          }
+        )
+        .then(res => {
+          toast.success('User Created Successfully')
+          console.log(res.data)
+          setUsername('')
+          setemail('')
+          setPassword('')
+          setConfirmPassword('')
+          setBio('')
+          setPublic(false)
+          setPrivate(false)
+          setTermsCheck(false)
+        })
+        .catch(error => {
+          toast.error(error.message)
+        })
+        .finally(() => {
+          setLoading(false)
+        })
+    }
   }
 
   return (
@@ -119,13 +156,21 @@ const Register = () => {
           <p className='valid_check'>Password Do Not Match</p>
         )}
         <label htmlFor='profile-image'>Profile Picture</label>
-        <input type='file' name='profile-image' id='register-profile-image' />
+        <input
+          type='file'
+          name='profile-image'
+          id='register-profile-image'
+          onChange={e => {
+            setImageFile(e.target.files[0])
+          }}
+        />
         <label htmlFor='bio'>Bio</label>
         <div className='textarea-box'>
           <textarea
             name='bio'
             id='register-bio'
             placeholder='Tell us About Yourself'
+            value={bio}
             onChange={text => [setBio(text.target.value)]}
             onInput={text => {
               setBioCharCount(bioCharCount + 1)
@@ -178,9 +223,9 @@ const Register = () => {
           />
           <label htmlFor='agree'>I agree t the Terms and Condition</label>
         </div>
-        <button type='submit' className='register-btn'>
+        <button disabled={loading} type='submit' className='register-btn'>
           Register
-            <div className='spinner'></div>
+          {loading && <div className='spinner'></div>}
         </button>
         <p className='register_login_toggle'>
           Already have an account ? Log in
