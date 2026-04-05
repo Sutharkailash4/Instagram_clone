@@ -11,113 +11,156 @@ body {
 }
 
 #root,
-.app_box {
+.app {
   width: 100%;
   height: 100%;
 }
 
 button {
-  border: none;
-  border: 5px;
   cursor: pointer;
   color: white;
+  border: none;
+  border-radius: 5px;
 }
 
 button:active {
   transform: scale(0.95);
 }
 
-.register_main_box,
-.login_main_box {
+.register-container {
+  border: 1px solid black;
+  min-height: 100vh;
   width: 100%;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.register-container form {
+  width: 32%;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  box-shadow: 0 0 10px black;
+  border-radius: 5px;
+}
+
+.register-container form input {
+  height: 50px;
+  font-size: 17px;
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+  outline: 1px solid #ccc;
+}
+
+.register-container form label {
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+.register-container form textarea {
+  height: 80px;
+  padding: 8px;
+  font-size: 17px;
+  border-radius: 5px;
+  border: none;
+  outline: 1px solid #ccc;
+}
+
+.register-container form .account-type-container {
+  display: flex;
+  gap: 10px;
+}
+
+.register-container form .agree-terms-container {
+  display: flex;
+  gap: 10px;
+}
+
+.register-container form .register-btn {
+  background-color: blue;
+  height: 50px;
+  font-size: 18px;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 10px;
 }
 
-.register_main_box form {
-  width: 30%;
-  border: 1px solid black;
-  padding: 10px;
-  position: relative;
-}
-
-.login_main_box form {
-  width: 30%;
-  border: 1px solid black;
-  padding: 10px;
-  position: relative;
-}
-
-.heading {
-  font-size: 30px;
+.register-container form .register_login_toggle {
   text-align: center;
-  font-family: sans-serif;
 }
 
-.register_main_box input {
-  width: 100%;
-  height: 50px;
-  margin-block: 10px;
-  padding: 8px;
-  font-size: 17px;
-  border-radius: 10px;
-  border: none;
-  outline: 1px solid #ccc;
+.register-container .heading {
+  font-size: 35px;
 }
 
-.login_main_box input {
-  width: 100%;
-  height: 50px;
-  margin-block: 10px;
-  padding: 8px;
-  font-size: 17px;
-  border-radius: 10px;
-  border: none;
-  outline: 1px solid #ccc;
+.register-container .para-heading {
+  font-size: 20px;
 }
 
-.register_btn,
-.login_btn {
-  width: 100%;
-  height: 50px;
-  background-color: rgb(107, 22, 22);
-  border-radius: 10px;
-  font-size: 18px;
+.register-container form .check {
+  width: 18px;
+  outline: none;
 }
 
-.login_para,
-.register_para {
-  font-size: 16px;
-  margin-top: 10px;
-  font-family: sans-serif;
-}
-
-a {
-  text-decoration: none;
+.register-container form .valid_check {
   color: red;
+  margin-top: 5px;
 }
 
-.register_show_password {
+.register-container form ul {
+  margin-left: 20px;
+  margin-top: 5px;
+  color: blue;
+}
+
+.register-container form .show-hide-password {
   position: absolute;
-  top: 51%;
-  right: 6%;
-  font-size: 16px;
-  font-family: sans-serif;
+  top: 53.5%;
+  right: 36%;
   cursor: pointer;
+  padding: 10px;
 }
 
-.login_show_pass {
+.register-container form .textarea-box {
+  position: relative;
+}
+
+.register-container form .textarea-box textarea {
+  width: 100%;
+}
+
+.register-container form .bio-char-count {
   position: absolute;
-  top: 52%;
-  right: 6%;
-  font-size: 16px;
-  font-family: sans-serif;
-  cursor: pointer;
+  bottom: -27%;
+  right: 2%;
+  font-size: 20px;
 }
 
-.register_btn:disabled{
-  opacity: 0.7;
-  pointer-events: none;
+:root {
+  --count : 0px;
+}
+
+.register-container form .spinner {
+  width: 30px;
+  height: 30px;
+  border: 1px solid white;
+  border-radius: 50%;
+  background: conic-gradient(from var(--count) ,red, blue);
+}
+
+@keyframes spin {
+  from {
+
+  }
+
+  to {
+
+  }
 }

@@ -1,12 +1,12 @@
 import React from 'react'
-import All_Routes from './Routes/allRoutes'
+import All_Routes from './routes/route'
 
 const App = () => {
   return (
-    <div className='app_box'>
+    <div className='app'>
       <All_Routes />
-    </div>  
-  ) 
+    </div>
+  )
 }
 
 export default App
