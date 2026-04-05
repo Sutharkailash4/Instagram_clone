@@ -1,4 +1,4 @@
-import React, {  useState } from 'react'
+import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
@@ -73,7 +73,7 @@ const Register = () => {
           setPublic(false)
           setPrivate(false)
           setTermsCheck(false)
-          navigate("/login");
+          navigate('/login')
         })
         .catch(error => {
           toast.error(error.message)
@@ -138,7 +138,11 @@ const Register = () => {
             }
           }}
         >
-          {passwordShow === 'password' ? 'Show' : 'Hide'}
+          {password.length === 0
+            ? ''
+            : passwordShow === 'password'
+            ? 'show'
+            : 'Hide'}
         </p>
         <ul>
           <li>At least 8 character</li>
@@ -228,7 +232,7 @@ const Register = () => {
           <label htmlFor='agree'>I agree t the Terms and Condition</label>
         </div>
         <button disabled={loading} type='submit' className='register-btn'>
-          {loading ? "Registering" : "Register"}
+          {loading ? 'Registering' : 'Register'}
           {loading && <div className='spinner'></div>}
         </button>
         <p className='register_login_toggle'>
