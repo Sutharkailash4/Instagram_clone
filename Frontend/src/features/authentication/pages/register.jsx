@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, {  useState } from 'react'
 import { toast } from 'react-toastify'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const Register = () => {
   const [username, setUsername] = useState('')
@@ -20,6 +21,8 @@ const Register = () => {
   const [privateCheck, setPrivate] = useState(false)
   const [termsCheck, setTermsCheck] = useState(false)
 
+  const navigate = useNavigate()
+
   const submitHandler = e => {
     e.preventDefault()
     const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])/
@@ -37,8 +40,8 @@ const Register = () => {
       setConfirmPasswordValid(true)
     } else if (bio.trim() === '') {
       toast.error('Bio is Required')
-    } else if (bio.length < 150) {
-      toast.error('Please Enter Above 150 Character')
+    } else if (bio.length > 150) {
+      toast.error('Max 150 Character Allowed')
     } else if (!publicCheck && !privateCheck) {
       toast.error('Please Select Your Account Type')
     } else if (!termsCheck) {
@@ -49,11 +52,11 @@ const Register = () => {
         .post(
           'http://localhost:3000/api/auth/register',
           {
-            username: username,
-            email: email,
+            username: username.trim(),
+            email: email.trim(),
             password: password,
             profile_image: imageFile,
-            bio: bio
+            bio: bio.trim()
           },
           {
             withCredentials: true
@@ -70,6 +73,7 @@ const Register = () => {
           setPublic(false)
           setPrivate(false)
           setTermsCheck(false)
+          navigate("/login");
         })
         .catch(error => {
           toast.error(error.message)
@@ -224,7 +228,7 @@ const Register = () => {
           <label htmlFor='agree'>I agree t the Terms and Condition</label>
         </div>
         <button disabled={loading} type='submit' className='register-btn'>
-          Register
+          {loading ? "Registering" : "Register"}
           {loading && <div className='spinner'></div>}
         </button>
         <p className='register_login_toggle'>
