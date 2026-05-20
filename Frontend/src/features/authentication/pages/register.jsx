@@ -1,246 +1,246 @@
-import React, { useState } from 'react'
-import { toast } from 'react-toastify'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const [username, setUsername] = useState('')
-  const [email, setemail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [bio, setBio] = useState('')
+  const [username, setUsername] = useState("");
+  const [email, setemail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [bio, setBio] = useState("");
 
-  const [emailValid, setEmailValid] = useState(false)
-  const [confirmPasswordValid, setConfirmPasswordValid] = useState(false)
-  const [passwordShow, setPasswordShow] = useState('password')
-  const [bioCharCount, setBioCharCount] = useState(0)
-  const [loading, setLoading] = useState(false)
-  const [imageFile, setImageFile] = useState({})
+  const [emailValid, setEmailValid] = useState(false);
+  const [confirmPasswordValid, setConfirmPasswordValid] = useState(false);
+  const [passwordShow, setPasswordShow] = useState("password");
+  const [bioCharCount, setBioCharCount] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [imageFile, setImageFile] = useState("");
 
-  const [publicCheck, setPublic] = useState(false)
-  const [privateCheck, setPrivate] = useState(false)
-  const [termsCheck, setTermsCheck] = useState(false)
+  const [publicCheck, setPublic] = useState(false);
+  const [privateCheck, setPrivate] = useState(false);
+  const [termsCheck, setTermsCheck] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const submitHandler = e => {
-    e.preventDefault()
-    const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])/
-    if (username.trim() === '') {
-      toast.error('Username is Required')
-    } else if (email.trim() === '') {
-      setEmailValid(true)
-    } else if (password.trim() === '') {
-      toast.error('Password is Required')
+  const submitHandler = (e) => {
+    e.preventDefault();
+    const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])/;
+    if (username.trim() === "") {
+      toast.error("Username is Required");
+    } else if (email.trim() === "") {
+      setEmailValid(true);
+    } else if (password.trim() === "") {
+      toast.error("Password is Required");
     } else if (password.length < 8) {
-      toast.error('Password must be 8 charcter')
+      toast.error("Password must be 8 charcter");
     } else if (!passwordRegex.test(password)) {
-      toast.error('Password must conatin 1 number & 1 symbol')
+      toast.error("Password must conatin 1 number & 1 symbol");
     } else if (password !== confirmPassword) {
-      setConfirmPasswordValid(true)
-    } else if (bio.trim() === '') {
-      toast.error('Bio is Required')
+      setConfirmPasswordValid(true);
+    } else if (bio.trim() === "") {
+      toast.error("Bio is Required");
     } else if (bio.length > 150) {
-      toast.error('Max 150 Character Allowed')
+      toast.error("Max 150 Character Allowed");
     } else if (!publicCheck && !privateCheck) {
-      toast.error('Please Select Your Account Type')
+      toast.error("Please Select Your Account Type");
     } else if (!termsCheck) {
-      toast.error('Please Agree Terms and Condition')
+      toast.error("Please Agree Terms and Condition");
     } else {
-      setLoading(true)
+      setLoading(true);
       axios
         .post(
-          'http://localhost:3000/api/auth/register',
+          "http://localhost:3000/api/auth/register",
           {
             username: username.trim(),
             email: email.trim(),
             password: password,
             profile_image: imageFile,
-            bio: bio.trim()
+            bio: bio.trim(),
           },
           {
-            withCredentials: true
-          }
+            withCredentials: true,
+          },
         )
-        .then(res => {
-          toast.success('User Created Successfully')
-          console.log(res.data)
-          setUsername('')
-          setemail('')
-          setPassword('')
-          setConfirmPassword('')
-          setBio('')
-          setPublic(false)
-          setPrivate(false)
-          setTermsCheck(false)
-          navigate('/login')
+        .then((res) => {
+          toast.success("User Created Successfully");
+          setUsername("");
+          setemail("");
+          setPassword("");
+          setConfirmPassword("");
+          setBio("");
+          setPublic(false);
+          setPrivate(false);
+          setTermsCheck(false);
+          navigate("/login");
         })
-        .catch(error => {
-          toast.error(error.message)
+        .catch((error) => {
+          toast.error(error.response?.data?.message);
         })
         .finally(() => {
-          setLoading(false)
-        })
+          setLoading(false);
+        });
     }
-  }
+  };
 
   return (
-    <div className='register-container'>
-      <h2 className='heading'>Register</h2>
-      <p className='para-heading'>Register to create an account</p>
+    <div className="register-container">
+      <h2 className="heading">Register</h2>
+      <p className="para-heading">Register to create an account</p>
       <form
-        onSubmit={e => {
-          submitHandler(e)
+        onSubmit={(e) => {
+          submitHandler(e);
         }}
       >
-        <label htmlFor='username'>Username</label>
+        <label htmlFor="username">Username</label>
         <input
-          type='text'
-          name='username'
-          id='register-username'
-          placeholder='Username'
+          type="text"
+          name="username"
+          id="register-username"
+          placeholder="Username"
           value={username}
-          onChange={text => [setUsername(text.target.value)]}
+          onChange={(text) => [setUsername(text.target.value)]}
         />
-        <label htmlFor='email'>Email</label>
+        <label htmlFor="email">Email</label>
         <input
-          type='email'
-          name='email'
-          id='register-email'
-          placeholder='Email'
+          type="email"
+          name="email"
+          id="register-email"
+          placeholder="Email"
           value={email}
-          onChange={text => [setemail(text.target.value)]}
+          onChange={(text) => [setemail(text.target.value)]}
           onInput={() => {
-            setEmailValid(false)
+            setEmailValid(false);
           }}
         />
         {emailValid && (
-          <p className='valid_check'>Please enter a valid email</p>
+          <p className="valid_check">Please enter a valid email</p>
         )}
-        <label htmlFor='password'>Password</label>
+        <label htmlFor="password">Password</label>
         <input
           type={passwordShow}
-          name='password'
-          id='register-password'
-          placeholder='Password'
+          name="password"
+          id="register-password"
+          placeholder="Password"
           value={password}
-          onChange={text => [setPassword(text.target.value)]}
+          onChange={(text) => [setPassword(text.target.value)]}
         />
         <p
-          className='show-hide-password'
+          className="show-hide-password"
           onClick={() => {
-            if (passwordShow === 'password') {
-              console.log('Text')
-              setPasswordShow('text')
+            if (passwordShow === "password") {
+              setPasswordShow("text");
             } else {
-              console.log('Password')
-              setPasswordShow('password')
+              setPasswordShow("password");
             }
           }}
         >
           {password.length === 0
-            ? ''
-            : passwordShow === 'password'
-            ? 'show'
-            : 'Hide'}
+            ? ""
+            : passwordShow === "password"
+              ? "Show"
+              : "Hide"}
         </p>
         <ul>
           <li>At least 8 character</li>
           <li>1 Numebr & 1 Symbol</li>
         </ul>
-        <label htmlFor='confirm-passsword'>Confirm Password</label>
+        <label htmlFor="confirm-passsword">Confirm Password</label>
         <input
-          type='password'
-          name='confirm-password'
-          id='register-confirm-password'
-          placeholder='Confirm Password'
+          type="password"
+          name="confirm-password"
+          id="register-confirm-password"
+          placeholder="Confirm Password"
           value={confirmPassword}
-          onChange={text => {
-            setConfirmPassword(text.target.value)
-            setConfirmPasswordValid(false)
+          onChange={(text) => {
+            setConfirmPassword(text.target.value);
+            setConfirmPasswordValid(false);
           }}
         />
         {confirmPasswordValid && (
-          <p className='valid_check'>Password Do Not Match</p>
+          <p className="valid_check">Password Do Not Match</p>
         )}
-        <label htmlFor='profile-image'>Profile Picture</label>
+        <label htmlFor="profile-image">Profile Picture</label>
         <input
-          type='file'
-          name='profile-image'
-          id='register-profile-image'
-          onChange={e => {
-            setImageFile(e.target.files[0])
+          type="file"
+          name="profile-image"
+          id="register-profile-image"
+          onChange={(e) => {
+            setImageFile(e.target.files[0]);
           }}
         />
-        <label htmlFor='bio'>Bio</label>
-        <div className='textarea-box'>
+        <label htmlFor="bio">Bio</label>
+        <div className="textarea-box">
           <textarea
-            name='bio'
-            id='register-bio'
-            placeholder='Tell us About Yourself'
+            name="bio"
+            id="register-bio"
+            placeholder="Tell us About Yourself"
             value={bio}
-            onChange={text => [setBio(text.target.value)]}
-            onInput={text => {
-              setBioCharCount(bioCharCount + 1)
+            onChange={(e) => {
+              setBio(e.target.value);
+              setBioCharCount(e.target.value.length);
             }}
           ></textarea>
-          <p className='bio-char-count'>{bioCharCount} / 150</p>
+          <p className="bio-char-count">{bioCharCount} / 150</p>
         </div>
-        <div className='account-type-container'>
-          <label htmlFor='account-type'>Account Type</label>
+        <div className="account-type-container">
+          <label htmlFor="account-type">Account Type</label>
           <br />
           <input
-            type='checkbox'
-            name='public'
-            id='register-public'
-            className='check'
+            type="checkbox"
+            name="public"
+            id="register-public"
+            className="check"
             checked={publicCheck}
-            onClick={e => {
-              setPublic(true)
-              setPrivate(false)
+            onClick={(e) => {
+              setPublic(true);
+              setPrivate(false);
             }}
           />
-          <label htmlFor='register-public'>Public</label>
+          <label htmlFor="register-public">Public</label>
           <input
-            type='checkbox'
-            name='private'
-            id='register-private'
-            className='check'
+            type="checkbox"
+            name="private"
+            id="register-private"
+            className="check"
             checked={privateCheck}
             onClick={() => {
-              setPrivate(true)
-              setPublic(false)
+              setPrivate(true);
+              setPublic(false);
             }}
           />
-          <label htmlFor='register-private'>Private</label>
+          <label htmlFor="register-private">Private</label>
         </div>
-        <div className='agree-terms-container'>
+        <div className="agree-terms-container">
           <input
-            type='checkbox'
-            name='agree'
-            id='agree'
-            className='check'
+            type="checkbox"
+            name="agree"
+            id="agree"
+            className="check"
             checked={termsCheck}
-            onChange={e => {
+            onChange={(e) => {
               if (!termsCheck) {
-                setTermsCheck(true)
+                setTermsCheck(true);
               } else {
-                setTermsCheck(false)
+                setTermsCheck(false);
               }
             }}
           />
-          <label htmlFor='agree'>I agree t the Terms and Condition</label>
+          <label htmlFor="agree">I agree t the Terms and Condition</label>
         </div>
-        <button disabled={loading} type='submit' className='register-btn'>
-          {loading ? 'Registering' : 'Register'}
-          {loading && <div className='spinner'></div>}
+        <button disabled={loading} type="submit" className="register-btn">
+          {loading ? "Registering" : "Register"}
+          {loading && <div className="spinner"></div>}
         </button>
-        <p className='register_login_toggle'>
-          Already have an account ? Log in
+        <p className="register_login_toggle">
+          Already have an account ?{" "}
+          <span className="auth-toggle" onClick={() => [navigate("/login")]}>
+            Login
+          </span>
         </p>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;
