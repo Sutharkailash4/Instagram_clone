@@ -11,7 +11,7 @@ const likeSchema = new mongoose.Schema({
         ref: "Posts",
         required: [true, "Post is Required"]
     }
-}, { timeStamp: true });
+}, { timestamps: true });
 
 likeSchema.index({ user: 1, post: 1 }, { unique: true });
 

@@ -62,13 +62,14 @@ const registerController = async (req, res) => {
                 sameSite: "strict"
             });
             res.status(201).json({
-                message : "User Register Successfully",
-                username : user.username,
-                id : user._id,
-                email : user.email
+                message: "User Register Successfully",
+                username: user.username,
+                id: user._id,
+                email: user.email
             })
         }
     } catch (error) {
+        console.log(error.message);
         res.status(400).json({
             message: "Something Went Wrong",
             error: error.message
@@ -130,10 +131,10 @@ const loginController = async (req, res) => {
                 sameSite: "strict"
             });
             res.status(200).json({
-                message : "User Logged In Successfully",
-                username : user.username,
-                id : user._id,
-                email : user.email
+                message: "User Logged In Successfully",
+                username: user.username,
+                id: user._id,
+                email: user.email
             })
         }
     } catch (error) {
@@ -143,7 +144,25 @@ const loginController = async (req, res) => {
     }
 }
 
+// get me
+const getMeController = async (req, res) => {
+    try {
+        const id = req.user.id;
+        const user = await model.findById(id);
+        res.status(200).json({
+            message: "User Fetched Successfully",
+            user
+        })
+    } catch (error) {
+        res.status(400).json({
+            message: "Something Went Wrong",
+            error: error.message
+        })
+    }
+}
+
 module.exports = {
     registerController,
-    loginController
+    loginController,
+    getMeController
 }
