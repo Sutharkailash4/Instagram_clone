@@ -7,7 +7,8 @@ const identifyUser = async (req, res, next) => {
 
         if(!token){
             return res.status(401).json({
-                message : "Token Not Provided ! Unauthorized Access"
+                message : "Token Not Provided ! Unauthorized Access",
+                token
             })
         }
 

@@ -15,7 +15,7 @@ const createStoryController = async (req, res) => {
             })
         }
 
-        const response = await client.upload({
+        const response = await client.files.upload({
             file : req.file.buffer.tostring("base64"),
             fileName : req.file.originalname,
             folder : "/instagram-clone-stories"
