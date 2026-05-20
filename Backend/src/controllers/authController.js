@@ -1,37 +1,50 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const model = require(".././models/authModel");
+const model = require("../models/authModel");
 
-// Register 
+// Register
 const registerController = async (req, res) => {
     try {
+
         const data = req.body;
+
         if (!data.username || data.username.trim() === "") {
             return res.status(400).json({
                 message: "Username is Required"
             })
-        } else if (!data.email || data.email.trim() === "") {
+        }
+
+        else if (!data.email || data.email.trim() === "") {
             return res.status(400).json({
                 message: "Email is Required"
             })
-        } else if (!data.password || data.password.trim() === "") {
+        }
+
+        else if (!data.password || data.password.trim() === "") {
             return res.status(400).json({
                 message: "Password is Required"
             })
-        } else {
+        }
+
+        else {
+
             const { username, email, password, bio, profile_image } = req.body;
+
             const isEmailAlreadyExists = await model.findOne({
                 $or: [
                     { username },
                     { email }
                 ]
             })
+
             if (!!isEmailAlreadyExists) {
                 return res.status(409).json({
                     message: "Username or Email Alreday Exists ! Please Try Again"
                 })
             }
+
             const hash_password = await bcrypt.hash(password, 10);
+
             const user = await model.create({
                 username: username,
                 email: email,
@@ -39,28 +52,33 @@ const registerController = async (req, res) => {
                 bio: bio,
                 profile_image: profile_image
             });
+
             const access_token = jwt.sign({
                 id: user._id,
                 email: user.email
             },
                 process.env.JWT_ACCESS_TOKEN,
                 { expiresIn: "1h" });
+
             const refresh_token = jwt.sign({
                 id: user._id,
                 email: user.email
             },
                 process.env.JWT_REFRESH_TOKEN,
                 { expiresIn: "7d" });
+
             res.cookie("access_token", access_token, {
                 httpOnly: true,
                 secure: true,
                 sameSite: "strict"
             });
+
             res.cookie("refresh_token", refresh_token, {
                 httpOnly: true,
                 secure: true,
                 sameSite: "strict"
             });
+
             res.status(201).json({
                 message: "User Register Successfully",
                 username: user.username,
@@ -68,8 +86,11 @@ const registerController = async (req, res) => {
                 email: user.email
             })
         }
+
     } catch (error) {
-        console.log(error.message);
+
+        console.error(error);
+
         res.status(400).json({
             message: "Something Went Wrong",
             error: error.message
@@ -77,59 +98,75 @@ const registerController = async (req, res) => {
     }
 }
 
-//login
+// login
 const loginController = async (req, res) => {
     try {
+
         const data = req.body;
+
         if (!data.password || data.password.trim() === "") {
             return res.status(400).json({
                 message: "Password is Required For Login"
             })
-        } else if ((!data.username || data.username.trim() === "") && (!data.email || data.email.trim() === "")) {
+        }
+
+        else if ((!data.username || data.username.trim() === "") && (!data.email || data.email.trim() === "")) {
             return res.status(400).json({
                 message: "Username or Email is Required For Login"
             })
-        } else {
+        }
+
+        else {
+
             const { password, email, username } = req.body;
+
             const user = await model.findOne({
                 $or: [
                     { username },
                     { email }
                 ]
             });
+
             if (!user) {
                 return res.status(401).json({
                     message: "User Not Exists ! Invalid credentials"
                 })
             }
+
             const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
             if (!isPasswordCorrect) {
                 return res.status(401).json({
                     message: "Invalid Password ! Please Try Again"
                 })
             }
+
             const access_token = jwt.sign({
                 id: user._id,
                 email: user.email
             }, process.env.JWT_ACCESS_TOKEN, {
                 expiresIn: "1h"
             });
+
             const refresh_token = jwt.sign({
                 id: user._id,
                 email: user.email
             }, process.env.JWT_REFRESH_TOKEN, {
                 expiresIn: "7d"
             });
+
             res.cookie("access_token", access_token, {
                 httpOnly: true,
                 secure: true,
                 sameSite: "strict"
             });
+
             res.cookie("refresh_token", refresh_token, {
                 httpOnly: true,
                 secure: true,
                 sameSite: "strict"
             });
+
             res.status(200).json({
                 message: "User Logged In Successfully",
                 username: user.username,
@@ -137,9 +174,14 @@ const loginController = async (req, res) => {
                 email: user.email
             })
         }
+
     } catch (error) {
+
+        console.error(error);
+
         res.status(400).json({
-            message: "Something Went Wrong"
+            message: "Something Went Wrong",
+            error: error.message
         })
     }
 }
@@ -147,13 +189,20 @@ const loginController = async (req, res) => {
 // get me
 const getMeController = async (req, res) => {
     try {
+
         const id = req.user.id;
-        const user = await model.findById(id);
+
+        const user = await model.findById(id).select("-password");
+
         res.status(200).json({
             message: "User Fetched Successfully",
             user
         })
+
     } catch (error) {
+
+        console.error(error);
+
         res.status(400).json({
             message: "Something Went Wrong",
             error: error.message
